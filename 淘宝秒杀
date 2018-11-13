@@ -1,0 +1,78 @@
+"""
+Created on Tue Nov  6 10:43:30 2018
+
+@author: john
+"""
+
+'''--------------淘宝秒杀脚本----------------'''
+import os
+from selenium import webdriver
+import time
+import datetime
+from tkinter import*
+#firefox = os.path.dirname(__file__)   #返回路径的上一级路径字符串
+#abspath=os.path.abspath(firefox)            #返回当前工作目录的路径加上d组成的字符串
+#firefoxdriver = abspath+'\firefox.exe'
+#os.environ['webdriver.firefox.driver'] = firefoxdriver
+#driver = webdriver.Firefox()
+#driver.maximize_window()
+driver = webdriver.Firefox()
+def login():
+    driver.get('http://www.taobao.com')
+    if driver.find_element_by_link_text('亲，请登录'):
+        driver.find_element_by_link_text('亲，请登录').click()
+        print('请尽快完成扫码登录')
+        time.sleep(10)
+    if driver.find_element_by_id('J_MiniCartNum'): 
+        driver.find_element_by_id('J_MiniCartNum').click()
+    if driver.find_element_by_id('J_SelectAll2'):
+        driver.find_element_by_id('J_SelectAll2').click()
+    
+    print('登陆成功')
+    #购买产品
+def buy(buytime):
+    while True:
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        if now > buytime:
+            try:
+                #结算按钮
+                if driver.find_element_by_id('J_Go'):
+                    driver.find_element_by_id('J_Go').click()
+                driver.find_element_by_link_text('提交订单').click()
+            except:
+                time.sleep(0.01)
+        print(now)
+        time.sleep(0.01)
+if __name__=='__main__':
+    
+    login()
+    
+    buy(times)
+now1 = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+###界面程序
+gui = Tk() 
+gui.title("淘宝秒杀by天府老六")
+gui.geometry('600x400')
+l_n = Label(gui,text="现在时刻:"+now1,font = 'Helvetica -18',height =1,bg='pink')
+l_n.place(relx=0.1,rely=0.05)
+l_1=Label(gui,text='请输入秒杀时间',font = 'Helvetica -18',height =1)
+l_1.place(relx=0.1,rely=0.15)
+e=Entry(gui,bg='yellow',font = 'Helvetica -18')
+e.insert(1,now1)#输入时间格式
+e.place(in_=l_1,relx=1)#将输入控件放到l_1标签后
+def get_input():
+    times=e.get()
+    print(times)
+b = Button(gui,text='提交',command=get_input)
+b.place(relx=0.1,rely=0.25)
+#e.grid()
+#def ent_get():
+#    l_b=Label(gui,text=e.get())
+#b1 = Button(gui,text='提交',command=ent_get())
+#b1.pack(side='left')
+
+
+
+#t.delete()
+
+gui.mainloop()
